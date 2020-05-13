@@ -184,12 +184,21 @@ function toggleEntry(e){
 //This function regenerates the list onscreen for a given dataset.
 function populateList(dataSet){
 
-  var template2 = $("#listRowTemplate").clone();
-  $("#listBottom").empty().append(template2);
+  //Clone the template row
+  var templateOrigin = $("#listRowTemplate").clone();
+  //Assign the list area to a variable
+  var list = $("#listBottom");
+  //Initialize the array for all the list items
+  var finalList = [];
+  //Push the row template to the new list
+  finalList.push(templateOrigin);
+  //Purge the list area
+  list.empty();
 
+  // Iterate on the data set creating each list item
   for(i = 0; i<dataSet.length; i++){
 
-    var template = $("#listRowTemplate").clone();
+    var template = templateOrigin.clone();
 
     if(parseInt(dataSet[i].published)===1){
       template.children('.active').children('.toggle').removeClass('toggleOff').addClass('toggleOn');
@@ -203,7 +212,13 @@ function populateList(dataSet){
     template.children('.make').html(dataSet[i].makename);
     template.children('.origin').html('');
 
-    $("#listBottom").append(template);
+    //Push this iteration to the array of list items
+    finalList.push(template);
+  }
+
+  //Iterate on the items in the array appending each to the list area
+  for(i=0;i<finalList.length;i++){
+    list.append(finalList[i]);
   }
 }
 

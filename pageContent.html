@@ -1,0 +1,85 @@
+<div id="rightContentInner" class="listArea">
+  <div id="moduleOverlay" class="hide"></div>
+  <div class="moduleModal hide" id="moduleModal">
+    <div class="top">
+      <p>Add New Vehicle Make / Manufacturer</p>
+      <div class="close" id="modalClose">x</div>
+    </div>
+    <div class="middle">
+      <div class="left">
+        <div class="image">
+          <div class="changeButton">
+            <label for="upload">
+              <div>Upload Image</div>
+              <input type="file"
+         id="upload" name="upload"
+         accept="image/png" style="display: none;">
+            </label>
+          </div>
+        </div>
+        <div class="uploadText">Image must be of transparent PNG format in black and transparent only.</div>
+      </div>
+      <div class="right">
+
+        <div class="inputOuter">
+          <div class="inputTitle">Make Name</div>
+          <input type="text" placeholder="e.g. Volkswagon"/>
+        </div>
+
+        <div class="inputOuter">
+          <div class="inputTitle">Country of Origin</div>
+          <input type="text" placeholder="e.g. Germany"/>
+        </div>
+
+        <div class="inputOuter">
+          <div class="inputTitle">Active
+            <span class="subText">(Displayed in system lists)</span>
+          </div>
+          <select>
+            <option value="yes" default>Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <button>Save New Make</button>
+      </div>
+    </div>
+    <div class="bottom">
+    </div>
+  </div>
+  <div class="moduleHead">
+    <div class="top">
+      <div class="title">AutoList</div>
+      <div class="buttongroup">
+        <button id="newMakeButton">Add New Make</button>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="searchArea">
+        <input id="search" type="text" placeholder="Search Make" onkeyup="sortQuery(event)"/>
+      </div>
+    </div>
+  </div>
+  <div class="moduleList">
+    <div class="listTop">
+      <div class="listHeader active">Active</div>
+      <div class="listHeader image">Logo</div>
+      <div class="listHeader make">Make / Manufacturer</div>
+      <div class="listHeader origin">Origin Country</div>
+    </div>
+    <div class="listBottom" id="listBottom">
+      <div class="listEntry hide" id="listRowTemplate">
+        <div class="listColumn active">
+          <div class="toggle" onclick="toggleEntry(event)">
+            <div class="innerToggle"></div>
+          </div>
+        </div>
+        <div class="listColumn image">
+          <img class="logo" src=""/>
+        </div>
+        <div class="listColumn make">%MAKE%</div>
+        <div class="listColumn origin">%ORIGIN%</div>
+      </div>
+    </div>
+  </div>
+</div>

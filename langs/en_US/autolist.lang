@@ -1,0 +1,54 @@
+# Copyright (C) 2020 Benjamin Broad
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#
+# Generic
+#
+
+# Module label 'ModuleAutolistName'
+ModuleAutolistName = AutoList
+# Module description 'ModuleAutolistDesc'
+ModuleAutolistDesc = Manage vehicle makes.
+
+#
+# Admin page
+#
+AutolistSetup = Autolist setup
+Settings = Settings
+AutolistSetupPage = Autolist setup page
+AUTOLIST_MYPARAM1 = My param 1
+AUTOLIST_MYPARAM1Tooltip = My param 1 tooltip
+AUTOLIST_MYPARAM2=My param 2
+AUTOLIST_MYPARAM2Tooltip=My param 2 tooltip
+
+AutolistArea = Auto List
+
+#
+# About page
+#
+About = About
+AutolistAbout = About Autolist
+AutolistAboutPage = Autolist about page
+
+#
+# Sample page
+#
+MyPageName = My page name
+
+#
+# Sample widget
+#
+MyWidget = My widget
+MyWidgetDescription = My widget description

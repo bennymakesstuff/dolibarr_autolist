@@ -55,8 +55,6 @@ function getPageContent(){
   $.get('./pageContent.html')
     .done(function(data){
         pageContent = data;
-        console.log("Page Content Imported");
-        console.log(data);
         return pageContent
     })
     .fail(function(){
@@ -65,9 +63,9 @@ function getPageContent(){
     })
 
 }
-
+/*
 // This function returns a list of Vehicle Makes.
-async function getVehicleMakes(){
+function getVehicleMakes(){
   var vehicleMakes = null;
   $.get('./loadVehicleMakes.php')
     .done(function(data){
@@ -87,11 +85,68 @@ async function getVehicleMakes(){
 
   return vehicleMakes;
 }
+*/
+
+// This function gets or posts data wrapped in a promise from a JSON source
+async function getData(url,payload = null){
+  var requestMethod;
+  if(payload!=null){
+    requestMethod = {type:'POST',
+                      data: payload};
+  }
+  else{
+    requestMethod = {type:'GET'};
+  }
+  var responseData = await Promise.resolve(
+    $.ajax(url,requestMethod)
+    .then(function(data){
+      console.log(data);
+        var parsedData = JSON.parse(data);
+        return parsedData;
+    })).catch(function(e){
+          return("Failed: "+e.status+" - "+e.responseText);
+        });
+    return responseData;
+}
+
+//This function gets information from non JSON sources
+async function getMarkup(url){
+  var responseData = await Promise.resolve(
+    $.get(url)
+    .then(function(data){
+        return data;
+    })).catch(function(e){
+          return("Failed: "+e.status+" - "+e.responseText);
+        });
+    return responseData;
+}
+
+/*
+// This is an attempt at wrapping the session storage functions in a promise
+async function store(storageName,payload){
+  var responseData = await Promise.resolve(
+
+    try {
+        sessionStorage.setItem(storageName,JSON.stringify(payload));
+    }).
+    catch (error) {
+      console.log("Failed: "+error.status+' - '+error.responseText);
+    }
+
+  )
+}
+*/
+
 
 
 // --------------------------------- DATA MUTATION FUNCTIONS --------------------------------- //
 // Functions that work at mutating or creating data in the database
 
+//This function sorts a list of makes alphabetically
+function sortListAlphabetically(makes){
+  makes.sort((a,b) => (a.makename > b.makename) ? 1 : -1);
+  return makes;
+}
 
 
 // --------------------------------- DATA DELETION FUNCTIONS --------------------------------- //
@@ -148,8 +203,6 @@ function populateList(dataSet){
     template.children('.make').html(dataSet[i].makename);
     template.children('.origin').html('');
 
-    console.log(template);
-
     $("#listBottom").append(template);
   }
 }
@@ -199,6 +252,23 @@ function listFiles(event){
 
 
 // --------------------------------- EXECUTION LOGIC --------------------------------- //
+async function loadMakes(){
+
+  try {
+    const vehicleMakes = await getData('./loadVehicleMakes.php');
+    vehiclemakes = sortListAlphabetically(vehicleMakes);
+    sessionStorage.setItem('fullSet',JSON.stringify(vehicleMakes));
+    //sessionStorage.setItem('subSet',JSON.stringify(vehicleMakes));
+    populateList(vehicleMakes);
+  }
+  catch (error){
+    console.log('Failed: '+error.status+' - '+error.responseText);
+    return('Failed: '+error.status+' - '+error.responseText);
+  }
+
+}              // Get the list of vehicle makes.
+
+
 
 $(document).ready(function() {     //Awaits the document ready state ensuring that Dolibarr is fully loaded.
   // Find the current sizes in the page
@@ -220,11 +290,17 @@ $(document).ready(function() {     //Awaits the document ready state ensuring th
     setupLayout(topMenuHeight,sideMenuWidth);
   }
 
-var makes = getVehicleMakes();              // Get the list of vehicle makes.
+
+loadMakes(); //Loads the vehicles into the DOM
 
 //Add all the event listeners for the page
 $(document).on({click:function(){closeModal()}},'#modalClose');
 $(document).on({click:function(){openModal()}},'#newMakeButton');
 $(document).on({change:function(e){listFiles(e)}},'#upload');
 
+//Attempt at getting debug bar logging working.
+/*
+var logInfo = {message:'Is it working',logLevel:'LOG_INFO'};
+getData('./dolibarrLogging.php',JSON.stringify(logInfo));
+*/
 }); // End document ready state code block

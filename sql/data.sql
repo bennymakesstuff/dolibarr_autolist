@@ -1,0 +1,1 @@
+INSERT INTO llx_autolist_makes (entity,datec,makename,image,country,fk_user_creat,fk_user_modif,active) VALUES (0,'2020-05-19 01:45:00','Aston Martin','aston.png','England',71,71,1),(0,'2020-05-19 01:45:00','Dodge','dodge.png','USA',71,71,1);

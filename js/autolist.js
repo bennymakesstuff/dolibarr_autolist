@@ -35,6 +35,13 @@ function setupLayout(topMenuHeight,sideMenuWidth) {
     rightContentInner.height('calc(100vh - '+topMenuHeight+'px)');                      // Set the height of the element to window minus top menu height.
     rightContentInner.width('100%');                                                    // Set the element width to 100% of it's parent element.
 
+    var moduleHead = $("#moduleHead");
+    var listTop = $("#listTop");
+    var listBottom = $("#listBottom");
+
+    var calculatedListHeight = parseInt(rightContentInner.height()) - (parseInt(listTop.outerHeight(true))+parseInt(moduleHead.outerHeight(true)));
+    listBottom.height(calculatedListHeight+"px");
+
   })
   .fail(function(xhr){
     console.log('FAILURE: Can not get page content', xhr);

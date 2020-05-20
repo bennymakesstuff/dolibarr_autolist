@@ -135,13 +135,22 @@ else header('Cache-Control: no-cache');
 																											line-height: 160px;
 																											margin-bottom: 10px;
 																											cursor: pointer;
-																											border-radius: 0.25rem;}
+																											border-radius: 0.25rem;
+																											background-size: contain;
+																									    background-repeat: no-repeat;
+																									    background-position: center;
+																											position: relative;
+																											overflow: hidden;}
 
 #rightContentInner .moduleModal .middle .left .image:hover {border: 1px solid #4c4c4c;}
 
 #rightContentInner .moduleModal .middle .left .image .changeButton {color: #737373;
 																																    font-size: 1.1rem;
-																																    font-weight: 600;}
+																																    font-weight: 600;
+																																		position: relative;
+																																		height: 160px;
+																																		}
+
 #rightContentInner .moduleModal .middle .left .image .changeButton > label > div {width: 100%;
 																																							    height: 160px;
 																																							    cursor: pointer;}
@@ -306,7 +315,10 @@ else header('Cache-Control: no-cache');
 #rightContentInner .moduleList .listBottom .listEntry .active {width: 80px;line-height:90px;}
 #rightContentInner .moduleList .listBottom .listEntry .image {width: 80px;
 																															text-align: center;
-																															line-height: 80px;}
+																															line-height: 80px;
+																															background-position: center;
+																															background-size: contain;}
+
 #rightContentInner .moduleList .listBottom .listEntry .image .logo {width: 70px;
 																																		display: inline-block;
 																																		height: auto;
@@ -379,3 +391,14 @@ padding-left: 2px;
 
 .toggleOff {text-align: left;
 							background-color: #f5f5f5;}
+
+#imageLoader {height: 160px;
+							opacity: 0.5;
+					    position: absolute;
+					    bottom: 0;
+					    left: 0;
+					    width: 100%;
+							background-color: #134f9e;
+							transistion: width 100ms ease;}
+
+.redBorder {border: 1px solid #901919 !important;}

@@ -266,11 +266,108 @@ function listFiles(event){
         if('size' in file){
           response += ' - Size: '+file.size+' bytes'
         }
+        showImagePreview(fileBox);
+        uploadImage(fileBox,'./uploadManufacturerLogo.php')
         console.log(response);
       }
     }
   }
 }
+
+
+// This function shows the uploaded file as the
+// background image of the image window prior to Loading
+// and sets the loader to visible and full cover.
+function showImagePreview(input){
+  if(input.files && input.files[0]){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      $("#manufacturerImage").css({'background-image':'url('+e.target.result+')'});
+      $("#uploadImageText").addClass("hide");
+      $("#imageLoader").removeClass("hide");
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+  else{
+    console.log("No files selected");
+  }
+}
+
+function saveNewManufacturer(){
+
+  //NOTE: Need to revise the operations of this so that each validation is not nested
+  //      and that any unvalidated fields simply raise a flag.
+
+  //Assign each element on the page to a variable
+  var make = $("#makename");
+  var origin = $("#countryOrigin");
+  var active = $("#activeRecord");
+  var fileBox = document.getElementById('upload');
+
+  //Remove redBorder class where necessary
+
+
+
+  //Check that the manufacturer / make name is present
+  if(make.val().length<1){
+    alert('Makufacturer name must be entered.');      //If it is not present make an alert
+    make.parent().addClass("redBorder");
+    make.focus();
+  }
+  else{
+    make.parent().removeClass("redBorder");            //If makename is present check that a file has been selected for the image.
+    if(fileBox.files && fileBox.files[0]){            // if it had been it was uploaded previously to a temp file on the server.
+      var data = {file: fileBox.files[0].name,        // Place all the Manufacturer information into an object ready for handoff to the server
+                  makename: make.val(),
+                  origin: origin.val(),
+                  active: active.val()};
+
+      $("#manufacturerImage").removeClass("redBorder");
+
+      //POST the data to the server
+      console.log(data);
+    }
+    else{
+      alert('No image has been selected.');          //If there was no image selected notify the user.
+      $("#manufacturerImage").addClass("redBorder");
+    }
+  }
+
+
+  /*
+  $.post('./saveNewManufacturer.php',{make:make, origin:origin,active:active},function(data){
+
+  });
+  */
+}
+
+// This function uploads the image to the server
+function uploadImage(fileInput,destination){
+  var formData = new FormData();
+  formData.append('userfiles',fileInput.files[0]);
+  $.ajax({url: destination,
+          type: 'POST',
+          data: formData,
+          xhr: function(){
+            var xhr = new window.XMLHttpRequest();
+            xhr.upload.addEventListener('progress', function(evt){
+              if(evt.lengthComputable){
+                var percentComplete = evt.loaded / evt.total;
+                var newWidth = Math.round((1 - percentComplete) * 100);
+                console.log(newWidth);
+                $("#imageLoader").css({'width': newWidth+'%',bottom:'0px',right:'0px'});
+              }
+            },false);
+            return xhr;
+          },
+          success: function(data){
+            console.log("Uploaded");
+          },
+          cache: false,
+          contentType: false,
+          processData: false
+        });
+};
 
 
 // --------------------------------- EXECUTION LOGIC --------------------------------- //
@@ -319,7 +416,7 @@ loadMakes(); //Loads the vehicles into the DOM
 $(document).on({click:function(){closeModal()}},'#modalClose');
 $(document).on({click:function(){openModal()}},'#newMakeButton');
 $(document).on({change:function(e){listFiles(e)}},'#upload');
-
+$(document).on({click:function(){saveNewManufacturer()}}, '#saveMakeButton');
 //Attempt at getting debug bar logging working.
 /*
 var logInfo = {message:'Is it working',logLevel:'LOG_INFO'};

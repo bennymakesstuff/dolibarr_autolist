@@ -222,8 +222,8 @@ class modAutolist extends DolibarrModules
             //  0 => array(
             //      'label' => 'MyJob label',
             //      'jobtype' => 'method',
-            //      'class' => '/autolist/class/myobject.class.php',
-            //      'objectname' => 'MyObject',
+            //      'class' => '/autolist/class/automakes.class.php',
+            //      'objectname' => 'automakes',
             //      'method' => 'doScheduledJob',
             //      'parameters' => '',
             //      'comment' => 'Comment',
@@ -281,14 +281,14 @@ class modAutolist extends DolibarrModules
             'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
         );
         /* END MODULEBUILDER TOPMENU */
-        /* BEGIN MODULEBUILDER LEFTMENU MYOBJECT
+        /* BEGIN MODULEBUILDER LEFTMENU AUTOMAKES
         $this->menu[$r++]=array(
             'fk_menu'=>'fk_mainmenu=autolist',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
             'type'=>'left',			                // This is a Left menu entry
-            'titre'=>'List MyObject',
+            'titre'=>'List automakes',
             'mainmenu'=>'autolist',
-            'leftmenu'=>'autolist_myobject_list',
-            'url'=>'/autolist/myobject_list.php',
+            'leftmenu'=>'autolist_automakes_list',
+            'url'=>'/autolist/automakes_list.php',
             'langs'=>'autolist@autolist',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'position'=>1000+$r,
             'enabled'=>'$conf->autolist->enabled',  // Define condition to show or hide menu entry. Use '$conf->autolist->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
@@ -299,10 +299,10 @@ class modAutolist extends DolibarrModules
         $this->menu[$r++]=array(
             'fk_menu'=>'fk_mainmenu=autolist,fk_leftmenu=autolist',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
             'type'=>'left',			                // This is a Left menu entry
-            'titre'=>'New MyObject',
+            'titre'=>'New automakes',
             'mainmenu'=>'autolist',
-            'leftmenu'=>'autolist_myobject_new',
-            'url'=>'/autolist/myobject_page.php?action=create',
+            'leftmenu'=>'autolist_automakes_new',
+            'url'=>'/autolist/automakes_page.php?action=create',
             'langs'=>'autolist@autolist',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'position'=>1000+$r,
             'enabled'=>'$conf->autolist->enabled',  // Define condition to show or hide menu entry. Use '$conf->autolist->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
@@ -310,47 +310,76 @@ class modAutolist extends DolibarrModules
             'target'=>'',
             'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
         );
-        END MODULEBUILDER LEFTMENU MYOBJECT */
+        */
+
+		$this->menu[$r++]=array(
+                				'fk_menu'=>'fk_mainmenu=autolist',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+								'type'=>'left',			                // This is a Left menu entry
+								'titre'=>'List automakes',
+								'mainmenu'=>'autolist',
+								'leftmenu'=>'autolist_automakes',
+								'url'=>'/autolist/automakes_list.php',
+								'langs'=>'autolist@autolist',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+								'position'=>1100+$r,
+								'enabled'=>'$conf->autolist->enabled',  // Define condition to show or hide menu entry. Use '$conf->autolist->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+								'perms'=>'1',			                // Use 'perms'=>'$user->rights->autolist->level1->level2' if you want your menu with a permission rules
+								'target'=>'',
+								'user'=>2);				                // 0=Menu for internal users, 1=external users, 2=both
+		$this->menu[$r++]=array(
+                				'fk_menu'=>'fk_mainmenu=autolist,fk_leftmenu=autolist_automakes',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+								'type'=>'left',			                // This is a Left menu entry
+								'titre'=>'New automakes',
+								'mainmenu'=>'autolist',
+								'leftmenu'=>'autolist_automakes',
+								'url'=>'/autolist/automakes_card.php?action=create',
+								'langs'=>'autolist@autolist',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+								'position'=>1100+$r,
+								'enabled'=>'$conf->autolist->enabled',  // Define condition to show or hide menu entry. Use '$conf->autolist->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+								'perms'=>'1',			                // Use 'perms'=>'$user->rights->autolist->level1->level2' if you want your menu with a permission rules
+								'target'=>'',
+								'user'=>2);				                // 0=Menu for internal users, 1=external users, 2=both
+               		
+		/* END MODULEBUILDER LEFTMENU AUTOMAKES */
 
         // Exports profiles provided by this module
         $r=1;
-        /* BEGIN MODULEBUILDER EXPORT MYOBJECT */
+        /* BEGIN MODULEBUILDER EXPORT AUTOMAKES */
         /*
         $langs->load("autolist@autolist");
         $this->export_code[$r]=$this->rights_class.'_'.$r;
-        $this->export_label[$r]='MyObjectLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
-        $this->export_icon[$r]='myobject@autolist';
-        $keyforclass = 'MyObject'; $keyforclassfile='/mymobule/class/myobject.class.php'; $keyforelement='myobject';
+        $this->export_label[$r]='automakesLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
+        $this->export_icon[$r]='automakes@autolist';
+        $keyforclass = 'automakes'; $keyforclassfile='/mymobule/class/automakes.class.php'; $keyforelement='automakes';
         include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
-        $keyforselect='myobject'; $keyforaliasextra='extra'; $keyforelement='myobject';
+        $keyforselect='automakes'; $keyforaliasextra='extra'; $keyforelement='automakes';
         include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
         //$this->export_dependencies_array[$r]=array('mysubobject'=>'ts.rowid', 't.myfield'=>array('t.myfield2','t.myfield3')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
         $this->export_sql_start[$r]='SELECT DISTINCT ';
-        $this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'myobject as t';
+        $this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'automakes as t';
         $this->export_sql_end[$r] .=' WHERE 1 = 1';
-        $this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('myobject').')';
+        $this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('automakes').')';
         $r++; */
-        /* END MODULEBUILDER EXPORT MYOBJECT */
+        /* END MODULEBUILDER EXPORT AUTOMAKES */
 
         // Imports profiles provided by this module
         $r=1;
-        /* BEGIN MODULEBUILDER IMPORT MYOBJECT */
+        /* BEGIN MODULEBUILDER IMPORT AUTOMAKES */
         /*
          $langs->load("autolist@autolist");
          $this->export_code[$r]=$this->rights_class.'_'.$r;
-         $this->export_label[$r]='MyObjectLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
-         $this->export_icon[$r]='myobject@autolist';
-         $keyforclass = 'MyObject'; $keyforclassfile='/mymobule/class/myobject.class.php'; $keyforelement='myobject';
+         $this->export_label[$r]='automakesLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
+         $this->export_icon[$r]='automakes@autolist';
+         $keyforclass = 'automakes'; $keyforclassfile='/mymobule/class/automakes.class.php'; $keyforelement='automakes';
          include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
-         $keyforselect='myobject'; $keyforaliasextra='extra'; $keyforelement='myobject';
+         $keyforselect='automakes'; $keyforaliasextra='extra'; $keyforelement='automakes';
          include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
          //$this->export_dependencies_array[$r]=array('mysubobject'=>'ts.rowid', 't.myfield'=>array('t.myfield2','t.myfield3')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
          $this->export_sql_start[$r]='SELECT DISTINCT ';
-         $this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'myobject as t';
+         $this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'automakes as t';
          $this->export_sql_end[$r] .=' WHERE 1 = 1';
-         $this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('myobject').')';
+         $this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('automakes').')';
          $r++; */
-        /* END MODULEBUILDER IMPORT MYOBJECT */
+        /* END MODULEBUILDER IMPORT AUTOMAKES */
     }
 
     /**

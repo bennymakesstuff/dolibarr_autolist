@@ -1,5 +1,94 @@
 /* Javascript library of module Autolist */
 
+var jsEnv = {
+
+    //Properties
+    self: this,
+    userPermissions: function(){
+      return 'Hello';
+    },
+    moduleAuthor: "Benjamin Broad",
+    debug: {
+      panel: null,
+      item: null,
+      flush(){
+        this.panel.empty();
+        return "Debug JS Console Emptied";
+      }
+    },
+    // Methods
+    log(message,logVia){
+      //Logs a message to the dolibarr syslog and console
+      if(logVia=='syslog'){
+        if(this.debug.panel!=null&&this.debug.item!=null){
+            var logEntry = this.debug.item.clone();
+            logEntry.find('.phpdebugbar-widgets-label').first().html(message);
+            this.debug.panel.prepend(logEntry);
+            return "Log Message Delivered via SysLog";
+        }else{
+            return "SysLog Messaging not setup";
+        }
+
+
+      }
+      else if(logVia=='console'){
+        console.log(message);
+        return "Log Message Delivered via Console";
+      }
+      else if(logVia=='alert'){
+        alert(message);
+        return "Log Message Delivered via Alert";
+      }
+      else{
+        return "Logs must be made with second parameter of either 'syslog','console' or 'alert'.";
+      }
+    },
+
+    initialize(){
+      createDebugBarJS();
+    }
+}
+
+function createDebugBarJS(){
+
+  //Header of debug bar
+  var debugBarHeader = $(".phpdebugbar-header-left").first();
+
+  //Body of debug bar
+  var debugBarBody = $(".phpdebugbar-body").first();
+
+  //Tab title for debug bar
+  var newTab = $(".phpdebugbar-tab").first().clone();
+  newTab.removeClass('phpdebugbar-active');
+  newTab.children('.phpdebugbar-text').first().html('JS Console');
+  debugBarHeader.append(newTab);
+
+  //Panel for debug bar
+  var debugBarPanel = $(".phpdebugbar-widgets-timeline").first().parent().clone();
+  debugBarPanel.removeClass('phpdebugbar-active');
+  debugBarBody.append(debugBarPanel);
+
+  //Entry for debug bar
+  var debugBarEntry = debugBarPanel.children().first().children().first().clone();
+  debugBarEntry.find('.phpdebugbar-widgets-value').first().remove();
+  debugBarEntry.find('.phpdebugbar-widgets-label').first().empty();
+
+  //Assign Debug Bar items to jsEnv.debug object
+  jsEnv.debug.item = debugBarEntry;
+  jsEnv.debug.panel = debugBarPanel.children().first();
+
+  //Empty the debug bar
+  debugBarPanel.children().first().empty();
+
+  //Create listener to change debug panel
+  newTab.on("click",function(){
+    $(".phpdebugbar-tab").removeClass('phpdebugbar-active');
+    newTab.addClass('phpdebugbar-active');
+    $(".phpdebugbar-panel").removeClass('phpdebugbar-active');
+    debugBarPanel.addClass('phpdebugbar-active');
+  });
+}
+
 
 // --------------------------------- LAYOUT FUNCTIONS --------------------------------- //
 
@@ -144,7 +233,13 @@ async function store(storageName,payload){
 }
 */
 
-
+function getUserPermissions(){
+  console.log("Getting user permissions");
+  $.get('./getDolibarrPermissions.php')
+    .done(function(data){
+      console.log(JSON.parse(data));
+    });
+}
 
 // --------------------------------- DATA MUTATION FUNCTIONS --------------------------------- //
 // Functions that work at mutating or creating data in the database
@@ -317,15 +412,20 @@ function saveNewManufacturer(){
   else{
     make.parent().removeClass("redBorder");            //If makename is present check that a file has been selected for the image.
     if(fileBox.files && fileBox.files[0]){            // if it had been it was uploaded previously to a temp file on the server.
-      var data = {file: fileBox.files[0].name,        // Place all the Manufacturer information into an object ready for handoff to the server
+      var payload = {                                 // Place all the Manufacturer information into an object ready for handoff to the server
                   makename: make.val(),
-                  origin: origin.val(),
-                  active: active.val()};
+                  country: origin.val(),
+                  active: active.val(),
+                  action: 'add'};
 
       $("#manufacturerImage").removeClass("redBorder");
-
+      console.log(payload);
       //POST the data to the server
-      console.log(data);
+      $.post('./saveNewManufacturer.php',{data:payload})
+        .done(function(data){
+          console.log(data);
+        });
+
     }
     else{
       alert('No image has been selected.');          //If there was no image selected notify the user.
@@ -333,12 +433,6 @@ function saveNewManufacturer(){
     }
   }
 
-
-  /*
-  $.post('./saveNewManufacturer.php',{make:make, origin:origin,active:active},function(data){
-
-  });
-  */
 }
 
 // This function uploads the image to the server
@@ -355,7 +449,7 @@ function uploadImage(fileInput,destination){
                 var percentComplete = evt.loaded / evt.total;
                 var newWidth = Math.round((1 - percentComplete) * 100);
                 console.log(newWidth);
-                $("#imageLoader").css({'width': newWidth+'%',bottom:'0px',right:'0px'});
+                $("#imageLoader").animate({'width': newWidth+'%',bottom:'0px',right:'0px'},{queue:true});
               }
             },false);
             return xhr;
@@ -387,9 +481,7 @@ async function loadMakes(){
 
 }              // Get the list of vehicle makes.
 
-
-
-$(document).ready(function() {     //Awaits the document ready state ensuring that Dolibarr is fully loaded.
+function initialize(){
   // Find the current sizes in the page
   var topMenuHeight = parseInt($('#id-top').outerHeight());             // Get the height of the top menu
   var sideMenuWidth = parseInt($('#id-left').outerWidth());             // Get the height of the top menu
@@ -411,12 +503,20 @@ $(document).ready(function() {     //Awaits the document ready state ensuring th
 
 
 loadMakes(); //Loads the vehicles into the DOM
+}
 
+$(document).ready(function() {     //Awaits the document ready state ensuring that Dolibarr is fully loaded.
+
+initialize();
+
+getUserPermissions();
+//createDebugBarJS();
 //Add all the event listeners for the page
 $(document).on({click:function(){closeModal()}},'#modalClose');
 $(document).on({click:function(){openModal()}},'#newMakeButton');
 $(document).on({change:function(e){listFiles(e)}},'#upload');
 $(document).on({click:function(){saveNewManufacturer()}}, '#saveMakeButton');
+$(window).on({resize:function(){initialize()}});
 //Attempt at getting debug bar logging working.
 /*
 var logInfo = {message:'Is it working',logLevel:'LOG_INFO'};

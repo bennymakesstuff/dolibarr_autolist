@@ -396,7 +396,7 @@ padding-left: 2px;
 							opacity: 0.5;
 					    position: absolute;
 					    bottom: 0;
-					    left: 0;
+					    right: 0;
 					    width: 100%;
 							background-color: #134f9e;
 							transistion: width 100ms ease;}
